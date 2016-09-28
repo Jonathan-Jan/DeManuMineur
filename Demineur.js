@@ -27,8 +27,13 @@ function Demineur() {
             [0,2,2,2,0],
             [0,1,-1,1,0]
         ];
+    this.bombNumber = 3;
 
     this.gameOver = false;
+    this.win = false;
+
+    //list of coordinate of revealed Cell
+    this.revealed = [];
 
     /**
      * a player click on the game
@@ -37,7 +42,7 @@ function Demineur() {
      */
     this.click = (x,y) => {
 
-        if (this.gameOver) {
+        if (this.gameOver || this.win) {
             return;
         }
 
@@ -48,6 +53,8 @@ function Demineur() {
 
         //reveal this cell, and maybe is neighbor
         this.reveal(coordinate);
+
+        this.win = this.isWin();
     };
 
     /**
@@ -69,9 +76,6 @@ function Demineur() {
     this.getValue = (coordinate) => {
         return this.grid[coordinate.y][coordinate.x];
     };
-
-    //list of coordinaite of revealed Cell
-    this.revealed = [];
 
     /**
      * Reveal a cell
@@ -119,6 +123,19 @@ function Demineur() {
             return false;
         }
     };
+
+    /**
+     * test if the game is over
+     */
+    this.isWin = () => {
+        let cellNumber = this.grid.length * this.grid.length;
+        return (cellNumber - this.revealed.length) == this.bombNumber;
+    };
+
+    this.setGrid = (gridBuilder) => {
+        this.grid = gridBuilder.build();
+        this.bombNumber = gridBuilder.bombCells.length;
+    }
 }
 
 

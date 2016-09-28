@@ -96,7 +96,7 @@ describe('Demineur', function() {
 
         demineur.click(0,0);
 
-        assert(10,demineur.revealed.length);
+        assert.equal(10,demineur.revealed.length);
     });
 
     describe('#click()', function () {
@@ -105,6 +105,19 @@ describe('Demineur', function() {
 
         demineur.click(4,0);
 
-        assert(10,demineur.revealed.length);
+        assert.equal(10,demineur.revealed.length);
+    });
+
+    describe('#win()', function () {
+
+        let demineur = new Demineur();
+
+        demineur.click(0,0);
+        demineur.click(4,0);
+        demineur.click(2,0);
+        demineur.click(2,3);
+
+        assert.equal(22,demineur.revealed.length);
+        assert(demineur.isWin());
     });
 });
