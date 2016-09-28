@@ -1,0 +1,17 @@
+{
+  "name": "demanumineur",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Demineur.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Jonathan Jan <contact@jonathan-jan.fr> (http://jonathan-jan.fr)",
+  "license": "MIT",
+  "dependencies": {
+    "assert": "^1.4.1"
+  }
+}
