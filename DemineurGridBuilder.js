@@ -22,20 +22,31 @@ function DemineurGridBuilder(size, mineNumber) {
 
     /**
      * Constructor
+     * (called at this end of DemineurGridBuilder(...))
      */
     let Constructor = () => {
         //getting all coordinate
         this.coordinates = Coordinate.helperGridCoordinate(size);
 
+        this.bombCells = [];
+
         //placing bomb
         for(let i = 0; i < mineNumber; i++) {
+            //random x and y
             let x = Math.floor((Math.random() * size));
             let y = Math.floor((Math.random() * size));
 
-            let cell = new Cell(new Coordinate(x,y,size-1,size-1), true);
+
 
             if (!(this.coordinates[y][x] instanceof Cell)) {
+
+                //creating a bomb cell (see class Cell below)
+                let cell = new Cell(new Coordinate(x,y,size-1,size-1), true);
+
+                //adding this cell to the grid
                 this.coordinates[y][x] = cell;
+                //and to the list of bomb
+                this.bombCells.push(cell);
             }
             else {
                 i--; //no bomb placed
@@ -43,29 +54,21 @@ function DemineurGridBuilder(size, mineNumber) {
         }
 
         //placing cell which are next to a bomb
-        for (let y = 0; y < size; y++) {
-            for (let x = 0; x < size; x++) {
-
-                let current = this.coordinates[y][x];
-
-                if (current instanceof Cell && current.isBomb) {
-                    this.getCell(current.coordinate.north()).addBombNeightbor(current);
-                    this.getCell(current.coordinate.south()).addBombNeightbor(current);
-                    this.getCell(current.coordinate.east()).addBombNeightbor(current);
-                    this.getCell(current.coordinate.west()).addBombNeightbor(current);
-                    this.getCell(current.coordinate.north().east()).addBombNeightbor(current);
-                    this.getCell(current.coordinate.north().west()).addBombNeightbor(current);
-                    this.getCell(current.coordinate.south().east()).addBombNeightbor(current);
-                    this.getCell(current.coordinate.south().west()).addBombNeightbor(current);
-                }
-            }
-        }
+        this.bombCells.forEach(bombCell => {
+            this.getCell(bombCell.coordinate.north()).addBombNeightbor(bombCell);
+            this.getCell(bombCell.coordinate.south()).addBombNeightbor(bombCell);
+            this.getCell(bombCell.coordinate.east()).addBombNeightbor(bombCell);
+            this.getCell(bombCell.coordinate.west()).addBombNeightbor(bombCell);
+            this.getCell(bombCell.coordinate.north().east()).addBombNeightbor(bombCell);
+            this.getCell(bombCell.coordinate.north().west()).addBombNeightbor(bombCell);
+            this.getCell(bombCell.coordinate.south().east()).addBombNeightbor(bombCell);
+            this.getCell(bombCell.coordinate.south().west()).addBombNeightbor(bombCell);
+        });
     };
 
     /**
      * Getting a cell from coordinates
-     * @param x
-     * @param y
+     * @param coordinate
      * @returns {Cell}
      */
     this.getCell = (coordinate) => {
@@ -84,20 +87,33 @@ function DemineurGridBuilder(size, mineNumber) {
         }
     };
 
+    /**
+     * build a grid for the Demineur class
+     */
     this.build = () => {
+        //creating a grid of coordinate
         let grid = Coordinate.helperGridCoordinate(size);
 
         for (let y = 0; y < size; y++) {
             for (let x = 0; x < size; x++) {
 
+                // we have 3 types of cell in this.coordinates
+                // 1 - bomb
+                // 2 - cell which are next to one or more bomb
+                // 3 - other cell (which are not effectively in this.coordinates as Cell instance
+
+                //getting the cell from coordinates of the builder
                 let cell = this.coordinates[y][x];
 
+                //if this cell is a bomb... (1)
                 if (cell instanceof Cell && cell.isBomb) {
                     grid[y][x] = -1;
                 }
+                //if this cell is next to a bomb (2)
                 else if (cell instanceof Cell) {
                     grid[y][x] = cell.addBombNeightbor.length;
                 }
+                //if this is an empty cell (3)
                 else {
                     grid[y][x] = 0;
                 }
@@ -110,17 +126,29 @@ function DemineurGridBuilder(size, mineNumber) {
     Constructor();
 }
 
+/**
+ * A cell of the futur Demineur grid
+ * @param coordinate
+ * @param isBomb
+ * @constructor
+ */
 function Cell(coordinate, isBomb) {
-    this.coordinate = coordinate;
-    this.isBomb = isBomb;
-    this.bombNeightbor = [];
+    this.coordinate = coordinate; //x.y
+    this.isBomb = isBomb; //true if this is a bomb cell
+    this.bombNeightbor = []; //array of near cell which are bomb cell (sometimes it can contains the cell itself, but it doesn't matter)
 
+    /**
+     * Adding a neightbor cell
+     * @param bombCell
+     */
     this.addBombNeightbor = (bombCell) => {
 
+        //check if it has already been registered
         if (this.bombNeightbor.indexOf(bombCell.coordinate.getId()) > -1) {
             return;
         }
 
+        //add it
         this.bombNeightbor.push(bombCell.coordinate.getId());
 
     }
