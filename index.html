@@ -39,6 +39,18 @@
 
         </div>
 
+
+        <md-input-container>
+            <label>Mine number</label>
+            <input ng-model="Ctrl.mineNumber">
+        </md-input-container>
+        <md-input-container>
+            <label>Size</label>
+            <input ng-model="Ctrl.size" type="number">
+        </md-input-container>
+        <md-button aria-label="new" ng-click="Ctrl.new(Ctrl.size,Ctrl.mineNumber)">New</md-button>
+
+
     </div>
 
 
@@ -51,6 +63,7 @@
     <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
 
     <script src="Coordinate.js"></script>
+    <script src="DemineurGridBuilder.js"></script>
     <script src="Demineur.js"></script>
 
     <script src="app.js"></script>

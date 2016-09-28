@@ -5,12 +5,13 @@
 "use strict";
 
 try {
-    let Coordinate = require('./Coordinate');
+    //test mode
+    var Coordinate = require('./Coordinate');
 }
 catch (e) {
-    let Coordinate = window.Coordinate;
+    //web mode
+    var Coordinate = window.Coordinate;
 }
-
 
 
 /**

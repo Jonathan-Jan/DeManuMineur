@@ -2,6 +2,8 @@
  * Created by jonathan on 28/09/16.
  */
 
+"use strict";
+
 /**
  * Coordinate of a "Demineur" cell
  * @param x
@@ -56,6 +58,30 @@ function Coordinate(x,y, maxX, maxY) {
         return `${this.x}.${this.y}`;
     }
 }
+
+/**
+ * Get a coordinate system
+ * [
+ *  0:[0,1,2,3,4]
+ *  1:[0,1,2,3,4]
+ *  2:[0,1,2,3,4]
+ *  3:[0,1,2,3,4]
+ *  4:[0,1,2,3,4]
+ * ]
+ */
+Coordinate.helperGridCoordinate = function(size) {
+    let coordinates = [];
+    for (let i = 0; i < size; i++) {
+
+        coordinates.push([]);
+
+        for (let j = 0; j < size; j++) {
+            coordinates[i].push({x:j,y:i});
+        }
+    }
+
+    return coordinates;
+};
 
 //for test purpose.
 //do not care about this, newbie

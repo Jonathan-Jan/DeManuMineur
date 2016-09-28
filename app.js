@@ -11,15 +11,12 @@ angular.module('deManuMineur', ['ngMaterial'])
         function ($scope,$mdDialog) {
             let Ctrl = this;
 
-            //that's all
-            Ctrl.demineur = new Demineur();
-
+            // watch for gameOver to became true
             $scope.$watch('Ctrl.demineur.gameOver', (newVal) => {
                 if (!newVal) {
                     return;
                 }
 
-                // Appending dialog to document.body to cover sidenav in docs app
                 var confirm = $mdDialog.confirm()
                     .title('Game Over')
                     .textContent('You\'re such a noob, but I give you another chance...')
@@ -28,7 +25,7 @@ angular.module('deManuMineur', ['ngMaterial'])
                     .cancel('I better go back to learn how to be a good JavaScript Developper');
 
                 $mdDialog.show(confirm).then(function() {
-                    Ctrl.demineur = new Demineur();
+                    Ctrl.new(Ctrl.size,Ctrl.mineNumber);
                 }, function() {
 
                 });
@@ -49,15 +46,15 @@ angular.module('deManuMineur', ['ngMaterial'])
                 return "cell";
             };
 
-            //build an array of coordinate (for ng-repeat)
-            Ctrl.coordinates = [];
-            for (let i = 0; i < Ctrl.demineur.grid.length; i++) {
+            Ctrl.new = (size, mineNumber) => {
 
-                Ctrl.coordinates.push([]);
+                Ctrl.mineNumber = mineNumber;
+                Ctrl.size = size;
 
-                for (let j = 0; j < Ctrl.demineur.grid[i].length; j++) {
-                    Ctrl.coordinates[i].push({x:j,y:i});
-                }
-            }
+                Ctrl.demineur = new Demineur();
+                Ctrl.demineur.grid = new DemineurGridBuilder(size,mineNumber).build();
+                Ctrl.coordinates = Coordinate.helperGridCoordinate(size);
+            };
+            Ctrl.new(5,3);
         }
     ]);
